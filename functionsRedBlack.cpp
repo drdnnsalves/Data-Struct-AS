@@ -60,17 +60,42 @@ namespace RedBlackFunctions {
 
     template<typename T>
     T maxNode(Node<T>* ptrNode) {
-        return 0;
+        if (ptrNode == nullptr) {
+            cerr << "Error in maxNode: the tree is empty" << endl;
+            exit(1);
+        }
+
+        Node<T>* current = ptrNode;
+        while (current->ptrRight != nullptr) {
+            current = current->ptrRight;
+        }
+        return current->payload;
     }
     
     template<typename T>
     T minNode(Node<T>* ptrNode) {
-        return 0;
+        if (ptrNode == nullptr) {
+            cerr << "Error in minNode: the tree is empty" << endl;
+            exit(1);
+        }
+
+        Node<T>* current = ptrNode;
+        while (current->ptrLeft != nullptr) {
+            current = current->ptrLeft;
+        }
+        return current->payload;
     }
     
     template<typename T>
     int treeHeight(Node<T>* ptrNode) {
-        return 0;
+        if (ptrNode == nullptr) {
+            return -1;
+        }
+
+        int leftHeight = treeHeight(ptrNode->ptrLeft);
+        int rightHeight = treeHeight(ptrNode->ptrRight);
+
+        return 1 + max(leftHeight, rightHeight);
     }
 
     // Auxiliary function 
