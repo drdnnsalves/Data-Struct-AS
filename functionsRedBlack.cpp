@@ -23,7 +23,20 @@ namespace RedBlackFunctions {
 
     template<typename T>
     Node<T>* insertNode(Node<T>* ptrNode, T value) {
-        return nullptr;
+        Node<T>* ptrNewNode = createNode(value);
+
+        if(ptrNode == nullptr) {
+            ptrNewNode = changeColor(ptrNewNode);
+            return ptrNewNode;
+        }
+
+        if(value < ptrNode->payload) {
+            ptrNode->ptrLeft = insertNode(ptrNode->ptrLeft, value);
+        }
+        else {
+            ptrNode->ptrRight = insertNode(ptrNode->ptrRight, value);
+        }
+        
     }
 
     template<typename T>
@@ -60,18 +73,76 @@ namespace RedBlackFunctions {
         return 0;
     }
 
+    // Auxiliary function 
+    template<typename T>
+    Node<T>* changeColor(Node<T>* ptrNode) {
+        if(ptrNode == nullptr) {
+            cerr << "Error in changeColor: memory allocation failed" << endl;
+            exit(1);
+        }
+
+        if(ptrNode->color == RED) {
+            ptrNode->color = BLACK;
+            return ptrNode;
+        }
+        else {
+            ptrNode->color = RED;
+            return ptrNode;
+        }
+    }
+
     template<typename T>
     Node<T>* colorFlip(Node<T>* ptrNode) {
-        return nullptr;
+        if(ptrNode == nullptr) {
+            cerr << "Error in colorFlip: memory allocation failed" << endl;
+            exit(1);
+        }
+
+        ptrNode = changeColor(ptrNode);
+        ptrNode->ptrLeft = changeColor(ptrNode->ptrLeft);
+        ptrNode->ptrRight = changeColor(ptrNode->ptrRight); 
     }
 
     template<typename T>
     Node<T>* leftRotation(Node<T>* ptrNode) {
-        return nullptr;
+        // If there's no element in the right of the ptrNode, we can't do the left rotation
+        // We must return the same ptrNode
+        if(ptrNode->ptrRight == nullptr) {
+            return ptrNode;
+        }   
+        else {
+        Node<T>* ptrTemp = nullptr;
+
+        ptrTemp = ptrNode->ptrRight;
+        ptrNode->ptrRight = ptrTemp->ptrLeft;
+        ptrTemp->ptrLeft = ptrNode;
+
+        ptrTemp = changeColor(ptrTemp);
+        ptrTemp->ptrLeft = changeColor(ptrTemp->ptrLeft);
+        
+        return ptrTemp;
+        }
     }
+
 
     template<typename T>
     Node<T>* rightRotation(Node<T>* ptrNode) {
-        return nullptr;
+        // If there's no element in the left of the ptrNode, we can't do the right rotation
+        // We must return the same ptrNode
+        if(ptrNode->ptrLeft == nullptr) {
+            return ptrNode;
+        }
+        else {
+            Node<T>* ptrTemp = nullptr;
+
+            ptrTemp = ptrNode->ptrLeft;
+            ptrNode->ptrLeft = ptrTemp->ptrRight;
+            ptrTemp->ptrRight = ptrNode;
+
+            ptrTemp = changeColor(ptrTemp);
+            ptrTemp->ptrRight = changeColor(ptrTemp->ptrRight);
+
+            return ptrTemp;
+        }
     }
 }

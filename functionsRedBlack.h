@@ -45,6 +45,9 @@ namespace RedBlackFunctions {
     int treeHeight(Node<T>* ptrNode);
 
     template<typename T>
+    Node<T>* changeColor(Node<T>* ptrNode);
+
+    template<typename T>
     Node<T>* colorFlip(Node<T>* ptrNode);
 
     template<typename T>
