@@ -12,6 +12,7 @@ namespace RedBlackFunctions {
     template<typename T>
     struct Node {
         T payload;
+        Node* ptrParent;
         Node* ptrLeft;
         Node* ptrRight;
         Color color;
@@ -44,6 +45,7 @@ namespace RedBlackFunctions {
     template<typename T>
     int treeHeight(Node<T>* ptrNode);
 
+    // Four auxiliary functions made for "insertNode" function
     template<typename T>
     Node<T>* changeColor(Node<T>* ptrNode);
 
@@ -51,10 +53,13 @@ namespace RedBlackFunctions {
     Node<T>* colorFlip(Node<T>* ptrNode);
 
     template<typename T>
-    Node<T>* leftRotation(Node<T>* ptrNode);
+    void leftRotation(Node<T>*& ptrNode);
 
     template<typename T>
-    Node<T>* rightRotation(Node<T>* ptrNode);
+    void rightRotation(Node<T>*& ptrNode);
+
+    template<typename T>
+    Node<T>* fixRedBlack(Node<T>* ptrNode, Node<T>* ptrInsert);
 }
 
 #include "functionsRedBlack.cpp"

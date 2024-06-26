@@ -15,9 +15,11 @@ namespace RedBlackFunctions {
         }
 
         // Initialize the new node
+        ptrNode->ptrParent = nullptr;
         ptrNode->ptrLeft = nullptr;
         ptrNode->ptrRight = nullptr;
         ptrNode->color = RED;
+        ptrNode->payload = value;
 
         return ptrNode;
     }
@@ -26,36 +28,35 @@ namespace RedBlackFunctions {
     Node<T>* insertNode(Node<T>* ptrNode, T value) {
         Node<T>* ptrNewNode = createNode(value);
 
-        // If the tree is empty, insert the new node as the root
+        Node<T>* ptrTemp = ptrNode;
+
         if(ptrNode == nullptr) {
-            ptrNewNode = changeColor(ptrNewNode);
+            // If the tree is empty, insert the new node as the root
+            ptrNewNode->color = BLACK;
             return ptrNewNode;
         }
 
-        // Inserting the node as a Binary Tree
-        if(value < ptrNode->payload)
-            ptrNode->ptrLeft = insertNode(ptrNode->ptrLeft, value);
-        else
-            ptrNode->ptrRight = insertNode(ptrNode->ptrRight, value);
-
-
-        // Rearranging nodes to form a Red-Black Tree
-        if((ptrNode->ptrRight != nullptr && ptrNode->ptrRight->color == RED) && 
-           (ptrNode->ptrLeft == nullptr || ptrNode->ptrLeft->color == BLACK)) {
-            ptrNode = leftRotation(ptrNode);
+        if(value < ptrNode->payload) {
+            if(ptrNode->ptrLeft == nullptr) {
+                ptrNode->ptrLeft = ptrNewNode;
+                ptrNewNode->ptrParent = ptrNode;
+            } 
+            else
+                insertNode(ptrNode->ptrLeft, value);
         }
-        if(ptrNode->ptrLeft != nullptr && ptrNode->ptrLeft->color == RED && 
-           ptrNode->ptrLeft->ptrLeft != nullptr && ptrNode->ptrLeft->ptrLeft->color == RED) {
-            ptrNode = rightRotation(ptrNode);
-        }
-
-        if(ptrNode->ptrLeft != nullptr && ptrNode->ptrLeft->color == RED && 
-           ptrNode->ptrRight != nullptr && ptrNode->ptrRight->color == RED) {
-            flipColors(ptrNode);
+        else {
+            if(ptrNode->ptrRight == nullptr) {
+                ptrNode->ptrRight = ptrNewNode;
+                ptrNewNode->ptrParent = ptrNode;
+            }
+            else
+                insertNode(ptrNode->ptrRight, value);
         }
 
-        return ptrNode;
+        // Fixing the Tree to be RedBlack
+        return fixRedBlack(ptrTemp, ptrNewNode);
     }
+
 
     template<typename T>
     Node<T>* removeNode(Node<T>* ptrNode, T value) {
@@ -67,10 +68,32 @@ namespace RedBlackFunctions {
         return nullptr;
     }
 
+
     template<typename T>
     void traverseInOrder(Node<T>* ptrNode) {
-
+        if(ptrNode != nullptr) {
+            traverseInOrder(ptrNode->ptrLeft);
+            cout << ptrNode->payload;
+            if(ptrNode->color == RED)
+                cout << "-R ";
+            else if(ptrNode->color == BLACK)
+                cout << "-B ";
+            traverseInOrder(ptrNode->ptrRight);
+        }
     }
+/*
+    template<typename T>
+    void traverseInOrder(Node<T>* ptrNode) {
+        if(ptrNode != nullptr) {
+            traverseInOrder(ptrNode->ptrLeft);
+            cout << ptrNode->payload << " ";
+             if(ptrNode->ptrParent != nullptr)
+             cout << " ptrNode->ptrRight>payload = "<< ptrNode->ptrParent->payload;
+            
+            traverseInOrder(ptrNode->ptrRight);
+        }
+    }*/
+
 
     template<typename T>
     void verifyRedBlack(Node<T>* ptrNode) {
@@ -121,74 +144,134 @@ namespace RedBlackFunctions {
 
     template<typename T>
     Node<T>* changeColor(Node<T>* ptrNode) {
-        if(ptrNode == nullptr) {
-            cerr << "Error in changeColor: memory allocation failed" << endl;
+        if (ptrNode == nullptr) {
+            cerr << "Error in changeColor: null node" << endl;
             exit(1);
         }
 
         // Toggle the color of the node
-        if(ptrNode->color == RED) {
+        if (ptrNode->color == RED)
             ptrNode->color = BLACK;
-            return ptrNode;
-        }
-        else {
+        else
             ptrNode->color = RED;
-            return ptrNode;
-        }
+
+        return ptrNode;
     }
 
     template<typename T>
     Node<T>* colorFlip(Node<T>* ptrNode) {
         if(ptrNode == nullptr) {
-            cerr << "Error in colorFlip: memory allocation failed" << endl;
+            cerr << "Error in colorFlip: null node" << endl;
             exit(1);
         }
 
         ptrNode = changeColor(ptrNode);
-        ptrNode->ptrLeft = changeColor(ptrNode->ptrLeft);
-        ptrNode->ptrRight = changeColor(ptrNode->ptrRight); 
+        if(ptrNode->ptrLeft != nullptr)
+            ptrNode->ptrLeft = changeColor(ptrNode->ptrLeft);
+        if(ptrNode->ptrRight != nullptr)
+            ptrNode->ptrRight = changeColor(ptrNode->ptrRight);
+
+        return ptrNode;
     }
 
     template<typename T>
-    Node<T>* leftRotation(Node<T>* ptrNode) {
-        // If there's no element in the right of the ptrNode, we can't do the left rotation
-        // We must return the same ptrNode
-        if(ptrNode->ptrRight == nullptr) {
-            return ptrNode;
-        }   
-        else {
-        Node<T>* ptrTemp = nullptr;
-
-        ptrTemp = ptrNode->ptrRight;
+    void leftRotation(Node<T>*& ptrNode) {
+        Node<T>* ptrTemp = ptrNode->ptrRight;
         ptrNode->ptrRight = ptrTemp->ptrLeft;
+
+        if (ptrTemp->ptrLeft != nullptr)
+            ptrTemp->ptrLeft->ptrParent = ptrNode;
+
+        ptrTemp->ptrParent = ptrNode->ptrParent;
+
+        if (ptrNode->ptrParent == nullptr)
+            ptrNode = ptrTemp;
+        else if (ptrNode == ptrNode->ptrParent->ptrLeft)
+            ptrNode->ptrParent->ptrLeft = ptrTemp;
+        else
+            ptrNode->ptrParent->ptrRight = ptrTemp;
+
         ptrTemp->ptrLeft = ptrNode;
+        ptrNode->ptrParent = ptrTemp;
 
         ptrTemp = changeColor(ptrTemp);
         ptrTemp->ptrLeft = changeColor(ptrTemp->ptrLeft);
-        
-        return ptrTemp;
-        }
     }
-
 
     template<typename T>
-    Node<T>* rightRotation(Node<T>* ptrNode) {
-        // If there's no element in the left of the ptrNode, we can't do the right rotation
-        // We must return the same ptrNode
-        if(ptrNode->ptrLeft == nullptr) {
-            return ptrNode;
-        }
-        else {
-            Node<T>* ptrTemp = nullptr;
+    void rightRotation(Node<T>*& ptrNode) {
+        Node<T>* ptrTemp = ptrNode->ptrLeft;
+        ptrNode->ptrLeft = ptrTemp->ptrRight;
 
-            ptrTemp = ptrNode->ptrLeft;
-            ptrNode->ptrLeft = ptrTemp->ptrRight;
-            ptrTemp->ptrRight = ptrNode;
+        if (ptrTemp->ptrRight != nullptr)
+            ptrTemp->ptrRight->ptrParent = ptrNode;
 
-            ptrTemp = changeColor(ptrTemp);
-            ptrTemp->ptrRight = changeColor(ptrTemp->ptrRight);
+        ptrTemp->ptrParent = ptrNode->ptrParent;
 
-            return ptrTemp;
-        }
+        if (ptrNode->ptrParent == nullptr)
+            ptrNode = ptrTemp;
+        else if (ptrNode == ptrNode->ptrParent->ptrRight)
+            ptrNode->ptrParent->ptrRight = ptrTemp;
+        else
+            ptrNode->ptrParent->ptrLeft = ptrTemp;
+
+        ptrTemp->ptrRight = ptrNode;
+        ptrNode->ptrParent = ptrTemp;
+
+        ptrTemp = changeColor(ptrTemp);
+        ptrTemp->ptrRight = changeColor(ptrTemp->ptrRight);
     }
+
+    template<typename T>
+    Node<T>* fixRedBlack(Node<T>* ptrNode, Node<T>* ptrInsert) {
+        while(ptrInsert != ptrNode && ptrInsert->ptrParent->color == RED) {
+            if(ptrInsert->ptrParent == ptrInsert->ptrParent->ptrParent->ptrLeft) {
+                Node<T>* ptrUncle1 = ptrInsert->ptrParent->ptrParent->ptrRight;
+
+
+                cout << ptrNode->payload << endl;
+                if(ptrUncle1 != nullptr && ptrUncle1->color == RED) {
+                    ptrInsert->ptrParent->color = BLACK;
+                    ptrUncle1->color = BLACK;
+                    ptrInsert->ptrParent->ptrParent->color = RED;
+                    ptrInsert = ptrInsert->ptrParent->ptrParent;
+
+
+                    cout << ptrInsert->payload << endl;
+                    cout << ptrNode->payload << endl;
+                }
+                else {
+                    if(ptrInsert == ptrInsert->ptrParent->ptrRight) {
+                        ptrInsert = ptrInsert->ptrParent;
+                        leftRotation(ptrInsert);
+                    }
+                    ptrInsert->ptrParent->color = BLACK;
+                    ptrInsert->ptrParent->ptrParent->color = RED;
+                    rightRotation(ptrInsert->ptrParent->ptrParent);
+                }
+            }
+            else {
+                Node<T>* ptrUncle2 = ptrInsert->ptrParent->ptrParent->ptrLeft;
+                if(ptrUncle2 != nullptr && ptrUncle2->color == RED) {
+                    ptrInsert->ptrParent->color = BLACK;
+                    ptrUncle2->color = BLACK;
+                    ptrInsert->ptrParent->ptrParent->color = RED;
+                    ptrInsert = ptrInsert->ptrParent->ptrParent;
+                }
+                else {
+                    if(ptrInsert == ptrInsert->ptrParent->ptrLeft) {
+                        ptrInsert = ptrInsert->ptrParent;
+                        rightRotation(ptrInsert);
+                    }
+                    ptrInsert->ptrParent->color = BLACK;
+                    ptrInsert->ptrParent->ptrParent->color = RED;
+                    leftRotation(ptrInsert->ptrParent->ptrParent);
+                }
+            }
+        }
+        ptrNode->color = BLACK;
+        return ptrNode;
+    }
+
+
 }
