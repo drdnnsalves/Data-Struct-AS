@@ -14,6 +14,7 @@ namespace RedBlackFunctions {
             exit(1);
         }
 
+        // Initialize the new node
         ptrNode->ptrLeft = nullptr;
         ptrNode->ptrRight = nullptr;
         ptrNode->color = RED;
@@ -25,18 +26,35 @@ namespace RedBlackFunctions {
     Node<T>* insertNode(Node<T>* ptrNode, T value) {
         Node<T>* ptrNewNode = createNode(value);
 
+        // If the tree is empty, insert the new node as the root
         if(ptrNode == nullptr) {
             ptrNewNode = changeColor(ptrNewNode);
             return ptrNewNode;
         }
 
-        if(value < ptrNode->payload) {
+        // Inserting the node as a Binary Tree
+        if(value < ptrNode->payload)
             ptrNode->ptrLeft = insertNode(ptrNode->ptrLeft, value);
-        }
-        else {
+        else
             ptrNode->ptrRight = insertNode(ptrNode->ptrRight, value);
+
+
+        // Rearranging nodes to form a Red-Black Tree
+        if((ptrNode->ptrRight != nullptr && ptrNode->ptrRight->color == RED) && 
+           (ptrNode->ptrLeft == nullptr || ptrNode->ptrLeft->color == BLACK)) {
+            ptrNode = leftRotation(ptrNode);
         }
-        
+        if(ptrNode->ptrLeft != nullptr && ptrNode->ptrLeft->color == RED && 
+           ptrNode->ptrLeft->ptrLeft != nullptr && ptrNode->ptrLeft->ptrLeft->color == RED) {
+            ptrNode = rightRotation(ptrNode);
+        }
+
+        if(ptrNode->ptrLeft != nullptr && ptrNode->ptrLeft->color == RED && 
+           ptrNode->ptrRight != nullptr && ptrNode->ptrRight->color == RED) {
+            flipColors(ptrNode);
+        }
+
+        return ptrNode;
     }
 
     template<typename T>
@@ -65,11 +83,12 @@ namespace RedBlackFunctions {
             exit(1);
         }
 
-        Node<T>* current = ptrNode;
-        while (current->ptrRight != nullptr) {
-            current = current->ptrRight;
+        // Traverse to the rightmost node
+        Node<T>* ptrCurrent = ptrNode;
+        while (ptrCurrent->ptrRight != nullptr) {
+            ptrCurrent = ptrCurrent->ptrRight;
         }
-        return current->payload;
+        return ptrCurrent->payload;
     }
     
     template<typename T>
@@ -79,11 +98,12 @@ namespace RedBlackFunctions {
             exit(1);
         }
 
-        Node<T>* current = ptrNode;
-        while (current->ptrLeft != nullptr) {
-            current = current->ptrLeft;
+        // Traverse to the leftmost node
+        Node<T>* ptrCurrent = ptrNode;
+        while (ptrCurrent->ptrLeft != nullptr) {
+            ptrCurrent = ptrCurrent->ptrLeft;
         }
-        return current->payload;
+        return ptrCurrent->payload;
     }
     
     template<typename T>
@@ -92,13 +112,13 @@ namespace RedBlackFunctions {
             return -1;
         }
 
-        int leftHeight = treeHeight(ptrNode->ptrLeft);
-        int rightHeight = treeHeight(ptrNode->ptrRight);
+        int iLeftHeight = treeHeight(ptrNode->ptrLeft);
+        int iRightHeight = treeHeight(ptrNode->ptrRight);
 
-        return 1 + max(leftHeight, rightHeight);
+        // Return the maximum height between left and right subtrees
+        return 1 + max(iLeftHeight, iRightHeight);
     }
 
-    // Auxiliary function 
     template<typename T>
     Node<T>* changeColor(Node<T>* ptrNode) {
         if(ptrNode == nullptr) {
@@ -106,6 +126,7 @@ namespace RedBlackFunctions {
             exit(1);
         }
 
+        // Toggle the color of the node
         if(ptrNode->color == RED) {
             ptrNode->color = BLACK;
             return ptrNode;
