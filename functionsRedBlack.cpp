@@ -25,36 +25,39 @@ namespace RedBlackFunctions {
     }
 
     template<typename T>
-    Node<T>* insertNode(Node<T>* ptrNode, T value) {
+    void insertNode(Node<T>*& ptrNode, T value, Node<T>*& ptrRoot) {
         Node<T>* ptrNewNode = createNode(value);
 
-        Node<T>* ptrTemp = ptrNode;
-
-        if(ptrNode == nullptr) {
+        if(ptrRoot == nullptr) {
             // If the tree is empty, insert the new node as the root
-            ptrNewNode->color = BLACK;
-            return ptrNewNode;
+            ptrNode = ptrNewNode;
+            ptrNode->color = BLACK;
+            return;
         }
 
         if(value < ptrNode->payload) {
             if(ptrNode->ptrLeft == nullptr) {
                 ptrNode->ptrLeft = ptrNewNode;
                 ptrNewNode->ptrParent = ptrNode;
+                // Fixing the Tree to be RedBlack
+                fixRedBlack(ptrRoot, ptrNewNode);
+                return;
             } 
-            else
-                insertNode(ptrNode->ptrLeft, value);
+            else{
+                insertNode(ptrNode->ptrLeft, value, ptrRoot);
+            }
         }
         else {
             if(ptrNode->ptrRight == nullptr) {
                 ptrNode->ptrRight = ptrNewNode;
                 ptrNewNode->ptrParent = ptrNode;
+                // Fixing the Tree to be RedBlack
+                fixRedBlack(ptrRoot, ptrNewNode);
+                return;
             }
             else
-                insertNode(ptrNode->ptrRight, value);
+                insertNode(ptrNode->ptrRight, value, ptrRoot);
         }
-
-        // Fixing the Tree to be RedBlack
-        return fixRedBlack(ptrTemp, ptrNewNode);
     }
 
 
@@ -159,22 +162,6 @@ namespace RedBlackFunctions {
     }
 
     template<typename T>
-    Node<T>* colorFlip(Node<T>* ptrNode) {
-        if(ptrNode == nullptr) {
-            cerr << "Error in colorFlip: null node" << endl;
-            exit(1);
-        }
-
-        ptrNode = changeColor(ptrNode);
-        if(ptrNode->ptrLeft != nullptr)
-            ptrNode->ptrLeft = changeColor(ptrNode->ptrLeft);
-        if(ptrNode->ptrRight != nullptr)
-            ptrNode->ptrRight = changeColor(ptrNode->ptrRight);
-
-        return ptrNode;
-    }
-
-    template<typename T>
     void leftRotation(Node<T>*& ptrNode) {
         Node<T>* ptrTemp = ptrNode->ptrRight;
         ptrNode->ptrRight = ptrTemp->ptrLeft;
@@ -223,22 +210,16 @@ namespace RedBlackFunctions {
     }
 
     template<typename T>
-    Node<T>* fixRedBlack(Node<T>* ptrNode, Node<T>* ptrInsert) {
+    void fixRedBlack(Node<T>*& ptrNode, Node<T>* ptrInsert) {
         while(ptrInsert != ptrNode && ptrInsert->ptrParent->color == RED) {
             if(ptrInsert->ptrParent == ptrInsert->ptrParent->ptrParent->ptrLeft) {
                 Node<T>* ptrUncle1 = ptrInsert->ptrParent->ptrParent->ptrRight;
 
-
-                cout << ptrNode->payload << endl;
                 if(ptrUncle1 != nullptr && ptrUncle1->color == RED) {
                     ptrInsert->ptrParent->color = BLACK;
                     ptrUncle1->color = BLACK;
                     ptrInsert->ptrParent->ptrParent->color = RED;
                     ptrInsert = ptrInsert->ptrParent->ptrParent;
-
-
-                    cout << ptrInsert->payload << endl;
-                    cout << ptrNode->payload << endl;
                 }
                 else {
                     if(ptrInsert == ptrInsert->ptrParent->ptrRight) {
@@ -270,8 +251,6 @@ namespace RedBlackFunctions {
             }
         }
         ptrNode->color = BLACK;
-        return ptrNode;
     }
-
 
 }

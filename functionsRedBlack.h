@@ -22,7 +22,7 @@ namespace RedBlackFunctions {
     Node<T>* createNode(T value);
 
     template<typename T>
-    Node<T>* insertNode(Node<T>* ptrNode, T value);
+    void insertNode(Node<T>*& ptrNode, T value);
 
     template<typename T>
     Node<T>* removeNode(Node<T>* ptrNode, T value);
@@ -50,16 +50,13 @@ namespace RedBlackFunctions {
     Node<T>* changeColor(Node<T>* ptrNode);
 
     template<typename T>
-    Node<T>* colorFlip(Node<T>* ptrNode);
-
-    template<typename T>
     void leftRotation(Node<T>*& ptrNode);
 
     template<typename T>
     void rightRotation(Node<T>*& ptrNode);
 
     template<typename T>
-    Node<T>* fixRedBlack(Node<T>* ptrNode, Node<T>* ptrInsert);
+    void fixRedBlack(Node<T>*& ptrNode, Node<T>* ptrInsert);
 }
 
 #include "functionsRedBlack.cpp"
