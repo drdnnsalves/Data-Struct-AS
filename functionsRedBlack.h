@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <string>
 
 namespace RedBlackFunctions {
 
@@ -18,45 +19,49 @@ namespace RedBlackFunctions {
         Color color;
     };
 
+
     template<typename T>
     Node<T>* createNode(T value);
 
     template<typename T>
-    void insertNode(Node<T>*& ptrNode, T value);
+    void insertNode(Node<T>** ptrRoot, T value);
 
     template<typename T>
-    Node<T>* removeNode(Node<T>* ptrNode, T value);
+    Node<T>* removeNode(Node<T>** ptrRoot, T value);
 
     template<typename T>
-    Node<T>* searchEspecific(Node<T>* ptrNode, T value);
+    Node<T>* searchEspecific(Node<T>** ptrRoot, T value);
 
     template<typename T>
-    void traverseInOrder(Node<T>* ptrNode);
+    void traverseInOrder(Node<T>* ptrRoot);
 
     template<typename T>
-    void verifyRedBlack(Node<T>* ptrNode);
+    void verifyRedBlack(Node<T>** ptrRoot);
 
     template<typename T>
-    T maxNode(Node<T>* ptrNode);
+    T maxNode(Node<T>** ptrRoot);
     
     template<typename T>
-    T minNode(Node<T>* ptrNode);
+    T minNode(Node<T>** ptrRoot);
     
     template<typename T>
-    int treeHeight(Node<T>* ptrNode);
-
-    // Four auxiliary functions made for "insertNode" function
-    template<typename T>
-    Node<T>* changeColor(Node<T>* ptrNode);
+    int treeHeight(Node<T>** ptrRoot);
 
     template<typename T>
-    void leftRotation(Node<T>*& ptrRoot, Node<T>*& ptrNode);
+    void printBT(const std::string& prefix, const Node<T>* node, bool isLeft);
 
     template<typename T>
-    void rightRotation(Node<T>*& ptrRoot, Node<T>*& ptrNode);
+    void printBT(const Node<T>* node);
+
+    // Three auxiliary functions made for "insertNode" function
+    template<typename T>
+    void leftRotation(Node<T>** ptrRoot, Node<T>* ptrNode);
 
     template<typename T>
-    void fixRedBlack(Node<T>*& ptrNode, Node<T>* ptrInsert);
+    void rightRotation(Node<T>** ptrRoot, Node<T>* ptrNode);
+
+    template<typename T>
+    void fixRedBlack(Node<T>** ptrRoot, Node<T>* ptrInsert);
 }
 
 #include "functionsRedBlack.cpp"
