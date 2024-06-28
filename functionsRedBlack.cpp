@@ -245,8 +245,67 @@ namespace RedBlackFunctions {
     }
 
     template<typename T>
-    void verifyRedBlack(Node<T>** ptrRoot) {
-        // To be implemented
+    bool verifyRedBlack(Node<T>* ptrNode) {
+        if (ptrNode == nullptr) return true;  // An empty tree is a valid Red-Black tree
+
+        // Root is black
+        if (ptrNode->color != BLACK) {
+            cerr << "Error: The root is not black" << endl;
+            return false;
+        }
+
+        // Red nodes have black children
+        if (!verifyRedProperty(ptrNode)) {
+            cerr << "Error: The property of red nodes is violated" << endl;
+            return false;
+        }
+
+        // All paths from any node to its descendant leaves contain the same number of black nodes
+        int blackNodeCount = 0;
+        Node<T>* temp = ptrNode;
+        while (temp != nullptr) {
+            if (temp->color == BLACK) blackNodeCount++;
+            temp = temp->ptrLeft;
+        }
+
+        if (!verifyBlackProperty(ptrNode, blackNodeCount, 0)) {
+            cerr << "Error: Paths from nodes to NIL do not have the same number of black nodes" << endl;
+            return false;
+        }
+
+        return true;
+    }
+
+    template<typename T>
+    bool verifyRedProperty(Node<T>* ptrNode) {
+        if (ptrNode == nullptr) return true;
+
+        // Checks if a red node has black children
+        if (ptrNode->color == RED) {
+            if ((ptrNode->ptrLeft != nullptr && ptrNode->ptrLeft->color == RED) ||
+                (ptrNode->ptrRight != nullptr && ptrNode->ptrRight->color == RED)) {
+                return false;
+            }
+        }
+
+        // Recursively check properties for left and right subtrees
+        return verifyRedProperty(ptrNode->ptrLeft) && verifyRedProperty(ptrNode->ptrRight);
+    }
+
+    template<typename T>
+    bool verifyBlackProperty(Node<T>* ptrNode, int blackNodeCount, int currentCount) {
+        if (ptrNode == nullptr) {
+            return currentCount == blackNodeCount;
+        }
+
+        // Increment the current black node count if the current node is black.
+        if (ptrNode->color == BLACK) {
+            currentCount++;
+        }
+
+        // Recursively verify the black height property for both the left and right subtrees.
+        return verifyBlackProperty(ptrNode->ptrLeft, blackNodeCount, currentCount) &&
+            verifyBlackProperty(ptrNode->ptrRight, blackNodeCount, currentCount);
     }
 }
 

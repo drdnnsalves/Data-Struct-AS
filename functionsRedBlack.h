@@ -36,7 +36,13 @@ namespace RedBlackFunctions {
     void traverseInOrder(Node<T>* ptrRoot);
 
     template<typename T>
-    void verifyRedBlack(Node<T>** ptrRoot);
+    bool verifyRedBlack(Node<T>* ptrNode);
+
+    template<typename T>
+    bool verifyRedProperty(Node<T>* ptrNode);
+
+    template<typename T>
+    bool verifyBlackProperty(Node<T>* ptrNode, int blackNodeCount, int currentCount);
 
     template<typename T>
     T maxNode(Node<T>** ptrRoot);
