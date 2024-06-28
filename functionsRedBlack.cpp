@@ -3,6 +3,10 @@
 
 using namespace std;
 
+#define ANSI_RED "\033[31m"
+#define ANSI_BLACK "\033[90m"
+#define ANSI_RESET "\033[0m"
+
 namespace RedBlackFunctions {
 
     template<typename T>
@@ -25,41 +29,37 @@ namespace RedBlackFunctions {
     }
 
     template<typename T>
-    void insertNode(Node<T>*& ptrNode, T value, Node<T>*& ptrRoot) {
+    void insertNode(Node<T>*& ptrNode, T value) {
+        Node<T>* x = ptrNode;
         Node<T>* ptrNewNode = createNode(value);
 
-        if(ptrRoot == nullptr) {
-            // If the tree is empty, insert the new node as the root
-            ptrNode = ptrNewNode;
-            ptrNode->color = BLACK;
-            return;
+        Node<T>* y = nullptr;
+
+        while(x != nullptr) {
+            y = x;
+            
+            if(ptrNewNode->payload < x->payload) {
+                x = x->ptrLeft;
+            }
+            else {
+                x = x->ptrRight;
+            }
+        
         }
 
-        if(value < ptrNode->payload) {
-            if(ptrNode->ptrLeft == nullptr) {
-                ptrNode->ptrLeft = ptrNewNode;
-                ptrNewNode->ptrParent = ptrNode;
-                // Fixing the Tree to be RedBlack
-                fixRedBlack(ptrRoot, ptrNewNode);
-                return;
-            } 
-            else{
-                insertNode(ptrNode->ptrLeft, value, ptrRoot);
-            }
+        ptrNewNode->ptrParent = y;
+        if(y == nullptr) {
+            ptrNode = ptrNewNode;
+        }
+        else if(ptrNewNode->payload < y->payload) {
+            y->ptrLeft = ptrNewNode;
         }
         else {
-            if(ptrNode->ptrRight == nullptr) {
-                ptrNode->ptrRight = ptrNewNode;
-                ptrNewNode->ptrParent = ptrNode;
-                // Fixing the Tree to be RedBlack
-                fixRedBlack(ptrRoot, ptrNewNode);
-                return;
-            }
-            else
-                insertNode(ptrNode->ptrRight, value, ptrRoot);
+            y->ptrRight = ptrNewNode;
         }
-    }
 
+        fixRedBlack(ptrNode, ptrNewNode);
+    }
 
     template<typename T>
     Node<T>* removeNode(Node<T>* ptrNode, T value) {
@@ -76,26 +76,16 @@ namespace RedBlackFunctions {
     void traverseInOrder(Node<T>* ptrNode) {
         if(ptrNode != nullptr) {
             traverseInOrder(ptrNode->ptrLeft);
-            cout << ptrNode->payload;
+
+            // Escolhe a cor baseada na cor do nó
             if(ptrNode->color == RED)
-                cout << "-R ";
+                cout << ANSI_RED << ptrNode->payload << "-R " << ANSI_RESET;
             else if(ptrNode->color == BLACK)
-                cout << "-B ";
+                cout << ANSI_BLACK << ptrNode->payload << "-B " << ANSI_RESET;
+
             traverseInOrder(ptrNode->ptrRight);
         }
     }
-/*
-    template<typename T>
-    void traverseInOrder(Node<T>* ptrNode) {
-        if(ptrNode != nullptr) {
-            traverseInOrder(ptrNode->ptrLeft);
-            cout << ptrNode->payload << " ";
-             if(ptrNode->ptrParent != nullptr)
-             cout << " ptrNode->ptrRight>payload = "<< ptrNode->ptrParent->payload;
-            
-            traverseInOrder(ptrNode->ptrRight);
-        }
-    }*/
 
 
     template<typename T>
@@ -162,17 +152,15 @@ namespace RedBlackFunctions {
     }
 
     template<typename T>
-    void leftRotation(Node<T>*& ptrNode) {
+    void leftRotation(Node<T>*& ptrRoot, Node<T>*& ptrNode) {
         Node<T>* ptrTemp = ptrNode->ptrRight;
         ptrNode->ptrRight = ptrTemp->ptrLeft;
 
         if (ptrTemp->ptrLeft != nullptr)
             ptrTemp->ptrLeft->ptrParent = ptrNode;
 
-        ptrTemp->ptrParent = ptrNode->ptrParent;
-
         if (ptrNode->ptrParent == nullptr)
-            ptrNode = ptrTemp;
+            ptrRoot = ptrTemp;
         else if (ptrNode == ptrNode->ptrParent->ptrLeft)
             ptrNode->ptrParent->ptrLeft = ptrTemp;
         else
@@ -180,23 +168,18 @@ namespace RedBlackFunctions {
 
         ptrTemp->ptrLeft = ptrNode;
         ptrNode->ptrParent = ptrTemp;
-
-        ptrTemp = changeColor(ptrTemp);
-        ptrTemp->ptrLeft = changeColor(ptrTemp->ptrLeft);
     }
 
     template<typename T>
-    void rightRotation(Node<T>*& ptrNode) {
+    void rightRotation(Node<T>*& ptrRoot, Node<T>*& ptrNode) {
         Node<T>* ptrTemp = ptrNode->ptrLeft;
         ptrNode->ptrLeft = ptrTemp->ptrRight;
 
         if (ptrTemp->ptrRight != nullptr)
             ptrTemp->ptrRight->ptrParent = ptrNode;
 
-        ptrTemp->ptrParent = ptrNode->ptrParent;
-
         if (ptrNode->ptrParent == nullptr)
-            ptrNode = ptrTemp;
+            ptrRoot = ptrTemp;
         else if (ptrNode == ptrNode->ptrParent->ptrRight)
             ptrNode->ptrParent->ptrRight = ptrTemp;
         else
@@ -204,53 +187,51 @@ namespace RedBlackFunctions {
 
         ptrTemp->ptrRight = ptrNode;
         ptrNode->ptrParent = ptrTemp;
-
-        ptrTemp = changeColor(ptrTemp);
-        ptrTemp->ptrRight = changeColor(ptrTemp->ptrRight);
     }
 
     template<typename T>
-    void fixRedBlack(Node<T>*& ptrNode, Node<T>* ptrInsert) {
-        while(ptrInsert != ptrNode && ptrInsert->ptrParent->color == RED) {
-            if(ptrInsert->ptrParent == ptrInsert->ptrParent->ptrParent->ptrLeft) {
-                Node<T>* ptrUncle1 = ptrInsert->ptrParent->ptrParent->ptrRight;
+    void fixRedBlack(Node<T>*& ptrRoot, Node<T>* ptrInsert) {
+        while (ptrInsert != ptrRoot && ptrInsert->ptrParent->color == RED) {
+            if (ptrInsert->ptrParent == ptrInsert->ptrParent->ptrParent->ptrLeft) {
+                Node<T>* ptrUncle = ptrInsert->ptrParent->ptrParent->ptrRight;
 
-                if(ptrUncle1 != nullptr && ptrUncle1->color == RED) {
+                if (ptrUncle != nullptr && ptrUncle->color == RED) {
                     ptrInsert->ptrParent->color = BLACK;
-                    ptrUncle1->color = BLACK;
+                    ptrUncle->color = BLACK;
                     ptrInsert->ptrParent->ptrParent->color = RED;
                     ptrInsert = ptrInsert->ptrParent->ptrParent;
-                }
-                else {
-                    if(ptrInsert == ptrInsert->ptrParent->ptrRight) {
+                } else {
+                    if (ptrInsert == ptrInsert->ptrParent->ptrRight) {
                         ptrInsert = ptrInsert->ptrParent;
-                        leftRotation(ptrInsert);
+                        leftRotation(ptrRoot, ptrInsert);
+                        ptrRoot->ptrParent = nullptr;
                     }
                     ptrInsert->ptrParent->color = BLACK;
                     ptrInsert->ptrParent->ptrParent->color = RED;
-                    rightRotation(ptrInsert->ptrParent->ptrParent);
+                    rightRotation(ptrRoot, ptrInsert->ptrParent->ptrParent);
+                    ptrRoot->ptrParent = nullptr;
                 }
-            }
-            else {
-                Node<T>* ptrUncle2 = ptrInsert->ptrParent->ptrParent->ptrLeft;
-                if(ptrUncle2 != nullptr && ptrUncle2->color == RED) {
+            } else {
+                Node<T>* ptrUncle = ptrInsert->ptrParent->ptrParent->ptrLeft;
+
+                if (ptrUncle != nullptr && ptrUncle->color == RED) {
                     ptrInsert->ptrParent->color = BLACK;
-                    ptrUncle2->color = BLACK;
+                    ptrUncle->color = BLACK;
                     ptrInsert->ptrParent->ptrParent->color = RED;
                     ptrInsert = ptrInsert->ptrParent->ptrParent;
-                }
-                else {
-                    if(ptrInsert == ptrInsert->ptrParent->ptrLeft) {
+                } else {
+                    if (ptrInsert == ptrInsert->ptrParent->ptrLeft) {
                         ptrInsert = ptrInsert->ptrParent;
-                        rightRotation(ptrInsert);
+                        rightRotation(ptrRoot, ptrInsert);
+                        ptrRoot->ptrParent = nullptr;
                     }
                     ptrInsert->ptrParent->color = BLACK;
                     ptrInsert->ptrParent->ptrParent->color = RED;
-                    leftRotation(ptrInsert->ptrParent->ptrParent);
+                    leftRotation(ptrRoot, ptrInsert->ptrParent->ptrParent);
+                    ptrRoot->ptrParent = nullptr;
                 }
             }
         }
-        ptrNode->color = BLACK;
+        ptrRoot->color = BLACK;
     }
-
 }

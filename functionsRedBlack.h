@@ -50,10 +50,10 @@ namespace RedBlackFunctions {
     Node<T>* changeColor(Node<T>* ptrNode);
 
     template<typename T>
-    void leftRotation(Node<T>*& ptrNode);
+    void leftRotation(Node<T>*& ptrRoot, Node<T>*& ptrNode);
 
     template<typename T>
-    void rightRotation(Node<T>*& ptrNode);
+    void rightRotation(Node<T>*& ptrRoot, Node<T>*& ptrNode);
 
     template<typename T>
     void fixRedBlack(Node<T>*& ptrNode, Node<T>* ptrInsert);
