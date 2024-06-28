@@ -30,7 +30,7 @@ namespace RedBlackFunctions {
     Node<T>* removeNode(Node<T>** ptrRoot, T value);
 
     template<typename T>
-    Node<T>* searchEspecific(Node<T>** ptrRoot, T value);
+    Node<T>* searchNode(Node<T>* ptrRoot, T value);
 
     template<typename T>
     void traverseInOrder(Node<T>* ptrRoot);

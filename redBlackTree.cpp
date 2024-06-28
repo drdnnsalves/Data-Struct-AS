@@ -25,5 +25,13 @@ int main() {
 
     cout << verifyRedBlack(root) <<endl;
 
+    Node<int>* node = nullptr;
+
+    node = searchNode(root, 5);
+    cout << node->payload << endl;
+
+    node = searchNode(root, 1001);
+    cout << node->payload << endl;
+
     return 0;
 }

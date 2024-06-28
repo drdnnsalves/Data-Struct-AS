@@ -240,8 +240,11 @@ namespace RedBlackFunctions {
     }
 
     template<typename T>
-    Node<T>* searchEspecific(Node<T>** ptrRoot, T value) {
-        return nullptr; // To be implemented
+    Node<T>* searchNode(Node<T>* ptrRoot, T value) {
+        if(ptrRoot == nullptr) return nullptr;
+        else if(value == ptrRoot->payload) return ptrRoot;
+        else if(value < ptrRoot->payload) return searchNode(ptrRoot->ptrLeft, value);
+        else return searchNode(ptrRoot->ptrRight, value);
     }
 
     template<typename T>
