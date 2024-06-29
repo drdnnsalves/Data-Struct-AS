@@ -192,37 +192,37 @@ namespace RedBlackFunctions {
     }
 
     template<typename T>
-    T maxNode(Node<T>** ptrRoot) {
-        if (*ptrRoot == nullptr) {
+    Node<T>* maxNode(Node<T>* ptrRoot) {
+        if (ptrRoot == nullptr) {
             cerr << "Error in maxNode: the tree is empty" << endl;
             exit(1);
         }
 
         // Traverse to the rightmost node
-        Node<T>* ptrCurrent = *ptrRoot;
+        Node<T>* ptrCurrent = ptrRoot;
         while (ptrCurrent->ptrRight != nullptr) {
             ptrCurrent = ptrCurrent->ptrRight;
         }
-        return ptrCurrent->payload;
+        return ptrCurrent;
     }
     
     template<typename T>
-    T minNode(Node<T>** ptrRoot) {
-        if (*ptrRoot == nullptr) {
+    Node<T>* minNode(Node<T>* ptrRoot) {
+        if (ptrRoot == nullptr) {
             cerr << "Error in minNode: the tree is empty" << endl;
             exit(1);
         }
 
         // Traverse to the leftmost node
-        Node<T>* ptrCurrent = *ptrRoot;
+        Node<T>* ptrCurrent = ptrRoot;
         while (ptrCurrent->ptrLeft != nullptr) {
             ptrCurrent = ptrCurrent->ptrLeft;
         }
-        return ptrCurrent->payload;
+        return ptrCurrent;
     }
     
     template<typename T>
-    int treeHeight(Node<T>** ptrRoot) {
+    int treeHeight(Node<T>* ptrRoot) {
         if (*ptrRoot == nullptr) {
             return -1;
         }
@@ -235,8 +235,30 @@ namespace RedBlackFunctions {
     }
 
     template<typename T>
-    Node<T>* removeNode(Node<T>* ptrRoot, T value) {
-        return nullptr; // To be implemented
+    void removeNode(Node<T>** ptrRoot, T value) {
+        if (*ptrRoot == nullptr) return;
+        
+        if (value < (*ptrRoot)->payload) {
+            removeNode(&(*ptrRoot)->ptrLeft, value);
+        } else if (value > (*ptrRoot)->payload) {
+            removeNode(&(*ptrRoot)->ptrRight, value);
+        } else {
+            Node<T>* ptrTemp = nullptr;
+            
+            if ((*ptrRoot)->ptrLeft == nullptr) {
+                ptrTemp = (*ptrRoot)->ptrRight;
+                free(*ptrRoot);
+                *ptrRoot = ptrTemp;
+            } else if ((*ptrRoot)->ptrRight == nullptr) {
+                ptrTemp = (*ptrRoot)->ptrLeft;
+                free(*ptrRoot);
+                *ptrRoot = ptrTemp;            
+            } else {
+                ptrTemp = minNode((*ptrRoot)->ptrRight);
+                (*ptrRoot)->payload = ptrTemp->payload;
+                removeNode(&(*ptrRoot)->ptrRight, ptrTemp->payload);
+            }
+        }
     }
 
     template<typename T>

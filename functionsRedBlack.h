@@ -27,7 +27,7 @@ namespace RedBlackFunctions {
     void insertNode(Node<T>** ptrRoot, T value);
 
     template<typename T>
-    Node<T>* removeNode(Node<T>** ptrRoot, T value);
+    void removeNode(Node<T>** ptrRoot, T value);
 
     template<typename T>
     Node<T>* searchNode(Node<T>* ptrRoot, T value);
@@ -45,13 +45,13 @@ namespace RedBlackFunctions {
     bool verifyBlackProperty(Node<T>* ptrNode, int blackNodeCount, int currentCount);
 
     template<typename T>
-    T maxNode(Node<T>** ptrRoot);
+    Node<T>* maxNode(Node<T>* ptrRoot);
     
     template<typename T>
-    T minNode(Node<T>** ptrRoot);
+    Node<T>* minNode(Node<T>* ptrRoot);
     
     template<typename T>
-    int treeHeight(Node<T>** ptrRoot);
+    int treeHeight(Node<T>* ptrRoot);
 
     template<typename T>
     void printBT(const std::string& prefix, const Node<T>* node, bool isLeft);

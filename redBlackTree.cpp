@@ -33,5 +33,10 @@ int main() {
     node = searchNode(root, 1001);
     cout << node->payload << endl;
 
+    removeNode(&root, 2);
+
+    printBT(root);
+    cout << verifyRedBlack(root) <<endl;
+
     return 0;
 }
