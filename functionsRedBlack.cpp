@@ -193,37 +193,37 @@ namespace RedBlackFunctions {
 
     template<typename T>
     Node<T>* maxNode(Node<T>* ptrRoot) {
-        if (ptrRoot == nullptr) {
+        if(ptrRoot == nullptr) {
             cerr << "Error in maxNode: the tree is empty" << endl;
             exit(1);
         }
 
         // Traverse to the rightmost node
         Node<T>* ptrCurrent = ptrRoot;
-        while (ptrCurrent->ptrRight != nullptr) {
+        while(ptrCurrent->ptrRight != nullptr)
             ptrCurrent = ptrCurrent->ptrRight;
-        }
+
         return ptrCurrent;
     }
     
     template<typename T>
     Node<T>* minNode(Node<T>* ptrRoot) {
-        if (ptrRoot == nullptr) {
+        if(ptrRoot == nullptr) {
             cerr << "Error in minNode: the tree is empty" << endl;
             exit(1);
         }
 
         // Traverse to the leftmost node
         Node<T>* ptrCurrent = ptrRoot;
-        while (ptrCurrent->ptrLeft != nullptr) {
+        while (ptrCurrent->ptrLeft != nullptr)
             ptrCurrent = ptrCurrent->ptrLeft;
-        }
+
         return ptrCurrent;
     }
     
     template<typename T>
     int treeHeight(Node<T>* ptrRoot) {
-        if (*ptrRoot == nullptr) {
+        if(*ptrRoot == nullptr) {
             return -1;
         }
 
@@ -236,24 +236,27 @@ namespace RedBlackFunctions {
 
     template<typename T>
     void removeNode(Node<T>** ptrRoot, T value) {
-        if (*ptrRoot == nullptr) return;
+        if(*ptrRoot == nullptr) 
+            return;
         
-        if (value < (*ptrRoot)->payload) {
+        if(value < (*ptrRoot)->payload)
             removeNode(&(*ptrRoot)->ptrLeft, value);
-        } else if (value > (*ptrRoot)->payload) {
-            removeNode(&(*ptrRoot)->ptrRight, value);
-        } else {
+        else if(value > (*ptrRoot)->payload)
+            removeNode(&(*ptrRoot)->ptrRight, value); 
+        else {
             Node<T>* ptrTemp = nullptr;
             
-            if ((*ptrRoot)->ptrLeft == nullptr) {
+            if((*ptrRoot)->ptrLeft == nullptr) {
                 ptrTemp = (*ptrRoot)->ptrRight;
                 free(*ptrRoot);
                 *ptrRoot = ptrTemp;
-            } else if ((*ptrRoot)->ptrRight == nullptr) {
+            } 
+            else if((*ptrRoot)->ptrRight == nullptr) {
                 ptrTemp = (*ptrRoot)->ptrLeft;
                 free(*ptrRoot);
                 *ptrRoot = ptrTemp;            
-            } else {
+            } 
+            else{
                 ptrTemp = minNode((*ptrRoot)->ptrRight);
                 (*ptrRoot)->payload = ptrTemp->payload;
                 removeNode(&(*ptrRoot)->ptrRight, ptrTemp->payload);
@@ -271,16 +274,16 @@ namespace RedBlackFunctions {
 
     template<typename T>
     bool verifyRedBlack(Node<T>* ptrNode) {
-        if (ptrNode == nullptr) return true;  // An empty tree is a valid Red-Black tree
+        if(ptrNode == nullptr) return true;  // An empty tree is a valid Red-Black tree
 
         // Root is black
-        if (ptrNode->color != BLACK) {
+        if(ptrNode->color != BLACK) {
             cerr << "Error: The root is not black" << endl;
             return false;
         }
 
         // Red nodes have black children
-        if (!verifyRedProperty(ptrNode)) {
+        if(!verifyRedProperty(ptrNode)) {
             cerr << "Error: The property of red nodes is violated" << endl;
             return false;
         }
@@ -288,12 +291,12 @@ namespace RedBlackFunctions {
         // All paths from any node to its descendant leaves contain the same number of black nodes
         int blackNodeCount = 0;
         Node<T>* temp = ptrNode;
-        while (temp != nullptr) {
+        while(temp != nullptr) {
             if (temp->color == BLACK) blackNodeCount++;
             temp = temp->ptrLeft;
         }
 
-        if (!verifyBlackProperty(ptrNode, blackNodeCount, 0)) {
+        if(!verifyBlackProperty(ptrNode, blackNodeCount, 0)) {
             cerr << "Error: Paths from nodes to NIL do not have the same number of black nodes" << endl;
             return false;
         }
@@ -303,10 +306,10 @@ namespace RedBlackFunctions {
 
     template<typename T>
     bool verifyRedProperty(Node<T>* ptrNode) {
-        if (ptrNode == nullptr) return true;
+        if(ptrNode == nullptr) return true;
 
         // Checks if a red node has black children
-        if (ptrNode->color == RED) {
+        if(ptrNode->color == RED) {
             if ((ptrNode->ptrLeft != nullptr && ptrNode->ptrLeft->color == RED) ||
                 (ptrNode->ptrRight != nullptr && ptrNode->ptrRight->color == RED)) {
                 return false;
@@ -319,12 +322,12 @@ namespace RedBlackFunctions {
 
     template<typename T>
     bool verifyBlackProperty(Node<T>* ptrNode, int blackNodeCount, int currentCount) {
-        if (ptrNode == nullptr) {
+        if(ptrNode == nullptr) {
             return currentCount == blackNodeCount;
         }
 
         // Increment the current black node count if the current node is black.
-        if (ptrNode->color == BLACK) {
+        if(ptrNode->color == BLACK) {
             currentCount++;
         }
 
