@@ -73,7 +73,15 @@ namespace RedBlackFunctions {
     void rightRotation(Node<T>** ptrRoot, Node<T>* ptrNode);
 
     template<typename T>
-    void fixRedBlack(Node<T>** ptrRoot, Node<T>* ptrInsert);
+    void fixInsertRedBlack(Node<T>** ptrRoot, Node<T>* ptrInsert);
+
+    // Three auxiliary functions made for "removeNode" function
+    template<typename T>
+    void fixRemoveRedBlack(Node<T>** ptrRoot, Node<T>* x);
+
+    template<typename T>
+    void transplant(Node<T>** ptrRoot, Node<T>* u, Node<T>* v);
+
 }
 
 #include "functionsRedBlack.cpp"

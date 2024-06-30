@@ -56,11 +56,11 @@ namespace RedBlackFunctions {
         }
 
         // Fix any Red-Black Tree violations
-        fixRedBlack(ptrRoot, ptrNewNode);
+        fixInsertRedBlack(ptrRoot, ptrNewNode);
     }
 
     template<typename T>
-    void fixRedBlack(Node<T>** ptrRoot, Node<T>* ptrInsert) {
+    void fixInsertRedBlack(Node<T>** ptrRoot, Node<T>* ptrInsert) {
         while (ptrInsert != *ptrRoot && ptrInsert->ptrParent->color == RED) {
             if (ptrInsert->ptrParent == ptrInsert->ptrParent->ptrParent->ptrLeft) {
                 Node<T>* ptrUncle = ptrInsert->ptrParent->ptrParent->ptrRight;
@@ -256,31 +256,45 @@ namespace RedBlackFunctions {
 
     template<typename T>
     void removeNode(Node<T>** ptrRoot, T value) {
-        if(*ptrRoot == nullptr) 
-            return;
-        
-        if(value < (*ptrRoot)->payload)
-            removeNode(&(*ptrRoot)->ptrLeft, value);
-        else if(value > (*ptrRoot)->payload)
-            removeNode(&(*ptrRoot)->ptrRight, value); 
+        Node<T>* nodeToDelete = searchNode(*ptrRoot, value); // Find the node to delete
+        if (nodeToDelete == nullptr) return;
+
+        Node<T>* y = nodeToDelete;
+        Node<T>* x;
+        bool originalColorBlack = y->color == BLACK; // Save the original color of the node to be deleted
+
+        if (nodeToDelete->ptrLeft == nullptr) {
+            x = nodeToDelete->ptrRight;
+            transplant(ptrRoot, nodeToDelete, nodeToDelete->ptrRight); // Replace nodeToDelete with its right child
+        } 
+        else if (nodeToDelete->ptrRight == nullptr) {
+            x = nodeToDelete->ptrLeft;
+            transplant(ptrRoot, nodeToDelete, nodeToDelete->ptrLeft); // Replace nodeToDelete with its left child
+        } 
         else {
-            Node<T>* ptrTemp = nullptr;
-            
-            if((*ptrRoot)->ptrLeft == nullptr) {
-                ptrTemp = (*ptrRoot)->ptrRight;
-                free(*ptrRoot);
-                *ptrRoot = ptrTemp;
+            y = minNode(nodeToDelete->ptrRight); // Find the minimum node in the right subtree
+            originalColorBlack = y->color == BLACK; // Save the original color of the successor
+            x = y->ptrRight;
+
+            if (y->ptrParent == nodeToDelete) {
+                if (x != nullptr) x->ptrParent = y; // Update x's parent to y if y is the direct child of nodeToDelete
             } 
-            else if((*ptrRoot)->ptrRight == nullptr) {
-                ptrTemp = (*ptrRoot)->ptrLeft;
-                free(*ptrRoot);
-                *ptrRoot = ptrTemp;            
-            } 
-            else{
-                ptrTemp = minNode((*ptrRoot)->ptrRight);
-                (*ptrRoot)->payload = ptrTemp->payload;
-                removeNode(&(*ptrRoot)->ptrRight, ptrTemp->payload);
+            else {
+                transplant(ptrRoot, y, y->ptrRight); // Replace y with its right child
+                y->ptrRight = nodeToDelete->ptrRight;
+                y->ptrRight->ptrParent = y;
             }
+
+            transplant(ptrRoot, nodeToDelete, y); // Replace nodeToDelete with y
+            y->ptrLeft = nodeToDelete->ptrLeft;
+            y->ptrLeft->ptrParent = y;
+            y->color = nodeToDelete->color; // Copy the color of nodeToDelete to y
+        }
+
+        free(nodeToDelete);
+
+        if (originalColorBlack) {
+            fixRemoveRedBlack(ptrRoot, x); // Fix any violations of the Red-Black properties
         }
     }
 
@@ -369,5 +383,108 @@ namespace RedBlackFunctions {
         return verifyBlackProperty(ptrNode->ptrLeft, blackNodeCount, currentCount) &&
             verifyBlackProperty(ptrNode->ptrRight, blackNodeCount, currentCount);
     }
+
+    template<typename T>
+    void fixRemoveRedBlack(Node<T>** ptrRoot, Node<T>* x) {
+        while (x != *ptrRoot && (x == nullptr || x->color == BLACK)) {
+
+            if (x == nullptr) return;
+            
+            if (x == x->ptrParent->ptrLeft) {
+                
+                Node<T>* w = x->ptrParent->ptrRight;
+
+                if (w != nullptr) {  // Ensure w is not null before accessing its color
+                    // Case 1: Sibling w is red
+                    if (w->color == RED) {
+                        w->color = BLACK;
+                        x->ptrParent->color = RED;
+                        leftRotation(ptrRoot, x->ptrParent);
+                        w = x->ptrParent->ptrRight;
+                    }
+
+                    // Case 2: Sibling w's children are both black
+                    if ((w->ptrLeft == nullptr || w->ptrLeft->color == BLACK) &&
+                        (w->ptrRight == nullptr || w->ptrRight->color == BLACK)) {
+                        if (w != nullptr) w->color = RED;
+                        x = x->ptrParent;
+                    } else {
+                        // Case 3: Sibling w's right child is black
+                        if (w->ptrRight == nullptr || w->ptrRight->color == BLACK) {
+                            if (w->ptrLeft != nullptr) w->ptrLeft->color = BLACK;
+                            if (w != nullptr) w->color = RED;
+                            rightRotation(ptrRoot, w);
+                            w = x->ptrParent->ptrRight;
+                        }
+
+                        // Case 4: Sibling w's right child is red
+                        if (w != nullptr) w->color = x->ptrParent->color;
+                        if (x->ptrParent != nullptr) x->ptrParent->color = BLACK;
+                        if (w != nullptr && w->ptrRight != nullptr) w->ptrRight->color = BLACK;
+                        leftRotation(ptrRoot, x->ptrParent);
+                        x = *ptrRoot;
+                    }
+                }
+            } else {
+                Node<T>* w = x->ptrParent->ptrLeft;
+
+                if (w != nullptr) {  // Ensure w is not null before accessing its color
+                    // Case 1: Sibling w is red
+                    if (w->color == RED) {
+                        w->color = BLACK;
+                        x->ptrParent->color = RED;
+                        rightRotation(ptrRoot, x->ptrParent);
+                        w = x->ptrParent->ptrLeft;
+                    }
+
+                    // Case 2: Sibling w's children are both black
+                    if ((w->ptrRight == nullptr || w->ptrRight->color == BLACK) &&
+                        (w->ptrLeft == nullptr || w->ptrLeft->color == BLACK)) {
+                        if (w != nullptr) w->color = RED;
+                        x = x->ptrParent;
+                    } else {
+                        // Case 3: Sibling w's left child is black
+                        if (w->ptrLeft == nullptr || w->ptrLeft->color == BLACK) {
+                            if (w->ptrRight != nullptr) w->ptrRight->color = BLACK;
+                            if (w != nullptr) w->color = RED;
+                            leftRotation(ptrRoot, w);
+                            w = x->ptrParent->ptrLeft;
+                        }
+
+                        // Case 4: Sibling w's left child is red
+                        if (w != nullptr) w->color = x->ptrParent->color;
+                        if (x->ptrParent != nullptr) x->ptrParent->color = BLACK;
+                        if (w != nullptr && w->ptrLeft != nullptr) w->ptrLeft->color = BLACK;
+                        rightRotation(ptrRoot, x->ptrParent);
+                        x = *ptrRoot;
+                    }
+                }
+            }
+        }
+
+        if (x != nullptr) x->color = BLACK;
+    }
+
+    template<typename T>
+    void transplant(Node<T>** ptrRoot, Node<T>* u, Node<T>* v) {
+        // If u is the root of the tree, set the root to v
+        if (u->ptrParent == nullptr) {
+            *ptrRoot = v;
+        }
+        // If u is the left child, replace it with v as the left child
+        else if (u == u->ptrParent->ptrLeft) {
+            u->ptrParent->ptrLeft = v;
+        }
+        // If u is the right child, replace it with v as the right child
+        else {
+            u->ptrParent->ptrRight = v;
+        }
+        // Set v's parent to u's parent, if v is not nullptr
+        if (v != nullptr) {
+            v->ptrParent = u->ptrParent;
+        }
+    }
+
+
 }
 

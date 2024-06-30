@@ -80,6 +80,11 @@ int main() {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    removeNode(&root, 100);
+    printBT(root);
+
+
+    /*
     cout << "\n\n#=#=#=# Height test #=#=#=#\n\n";
 
     const int numNodes = 1000000; // Number of nodes in the tree
@@ -97,7 +102,7 @@ int main() {
 
         // Insert 'numNodes' random values into the Red-Black tree
         for (int i = 0; i < numNodes; ++i) {
-            int value = rand() % 1000000; // Generate a random value (adjust range as needed)
+            int value = rand() % 1000000000; // Generate a random value (adjust range as needed)
             insertNode(&root, value);
         }
 
@@ -126,6 +131,7 @@ int main() {
     // Print the results
     cout << "Average execution time of treeHeightOptimized: " << avgDurationOptimized << " nanoseconds" << endl;
     cout << "Average execution time of treeHeight: " << avgDurationNormal << " nanoseconds" << endl;
+    */
 
     return 0;
 }
