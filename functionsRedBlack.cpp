@@ -248,7 +248,7 @@ namespace RedBlackFunctions {
         } else {
             int leftHeight = treeHeight(ptrRoot->ptrLeft);
             int rightHeight = treeHeight(ptrRoot->ptrRight);
-            
+
             // Return the maximum height between left and right subtrees
             return 1 + std::max(leftHeight, rightHeight);
         }
@@ -282,6 +282,20 @@ namespace RedBlackFunctions {
                 removeNode(&(*ptrRoot)->ptrRight, ptrTemp->payload);
             }
         }
+    }
+
+    template<typename T>
+    void clearTree(Node<T>** ptrRoot) {
+        if (*ptrRoot == nullptr) {
+            return;
+        }
+
+        // Post-order traversal to delete all nodes
+        clearTree(&((*ptrRoot)->ptrLeft));
+        clearTree(&((*ptrRoot)->ptrRight));
+
+        free(*ptrRoot); // Free memory using free() (assuming nodes were allocated with malloc)
+        *ptrRoot = nullptr;
     }
 
     template<typename T>

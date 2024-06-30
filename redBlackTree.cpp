@@ -115,6 +115,8 @@ int main() {
         timeDuration = duration_cast<nanoseconds>(timeStop - timeStart);
         totalDurationNormal += timeDuration.count();
 
+        clearTree(&root);
+
     }
 
     // Calculate the average execution times

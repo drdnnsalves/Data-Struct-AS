@@ -30,6 +30,9 @@ namespace RedBlackFunctions {
     void removeNode(Node<T>** ptrRoot, T value);
 
     template<typename T>
+    void clearTree(Node<T>** ptrRoot);
+
+    template<typename T>
     Node<T>* searchNode(Node<T>* ptrRoot, T value);
 
     template<typename T>
