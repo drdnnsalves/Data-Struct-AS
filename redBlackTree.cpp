@@ -1,6 +1,11 @@
 #include <iostream>
 #include <cstdlib>
+#include <chrono>
 #include "functionsRedBlack.h"
+
+using std::chrono::high_resolution_clock;
+using std::chrono::duration_cast;
+using std::chrono::nanoseconds;
 
 using namespace std;
 using namespace RedBlackFunctions;
@@ -74,6 +79,51 @@ int main() {
     cout << "\n\nMinimum payload in the tree: " << min->payload << endl;
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    cout << "\n\n#=#=#=# Height test #=#=#=#\n\n";
+
+    const int numNodes = 1000000; // Number of nodes in the tree
+    const int iterations = 10;    // Number of iterations for averaging
+
+    long long totalDurationOptimized = 0;
+    long long totalDurationNormal = 0;
+
+    // Perform measurements over iterations
+    for (int iter = 0; iter < iterations; ++iter) {
+        Node<int>* root = nullptr;
+
+        // Seed the random number generator
+        srand(time(nullptr));
+
+        // Insert 'numNodes' random values into the Red-Black tree
+        for (int i = 0; i < numNodes; ++i) {
+            int value = rand() % 1000000; // Generate a random value (adjust range as needed)
+            insertNode(&root, value);
+        }
+
+        // Measure time for treeHeightOptimized
+        auto timeStart = high_resolution_clock::now();
+        treeHeightOptimized(root);
+        auto timeStop = high_resolution_clock::now();
+        auto timeDuration = duration_cast<nanoseconds>(timeStop - timeStart);
+        totalDurationOptimized += timeDuration.count();
+
+        // Measure time for treeHeight
+        timeStart = high_resolution_clock::now();
+        treeHeight(root);
+        timeStop = high_resolution_clock::now();
+        timeDuration = duration_cast<nanoseconds>(timeStop - timeStart);
+        totalDurationNormal += timeDuration.count();
+
+    }
+
+    // Calculate the average execution times
+    long long avgDurationOptimized = totalDurationOptimized / iterations;
+    long long avgDurationNormal = totalDurationNormal / iterations;
+
+    // Print the results
+    cout << "Average execution time of treeHeightOptimized: " << avgDurationOptimized << " nanoseconds" << endl;
+    cout << "Average execution time of treeHeight: " << avgDurationNormal << " nanoseconds" << endl;
 
     return 0;
 }

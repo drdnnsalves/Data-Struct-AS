@@ -54,6 +54,9 @@ namespace RedBlackFunctions {
     int treeHeight(Node<T>* ptrRoot);
 
     template<typename T>
+    int treeHeightOptimized(Node<T>* ptrRoot);
+
+    template<typename T>
     void printBT(const std::string& prefix, const Node<T>* node, bool isLeft);
 
     template<typename T>

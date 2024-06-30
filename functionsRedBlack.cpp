@@ -220,18 +220,38 @@ namespace RedBlackFunctions {
 
         return ptrCurrent;
     }
-    
+
     template<typename T>
     int treeHeight(Node<T>* ptrRoot) {
-        if(*ptrRoot == nullptr) {
+        if(ptrRoot == nullptr) {
             return -1;
         }
 
-        int leftHeight = treeHeight(&((*ptrRoot)->ptrLeft));
-        int rightHeight = treeHeight(&((*ptrRoot)->ptrRight));
+        int leftHeight = treeHeight(ptrRoot->ptrLeft);
+        int rightHeight = treeHeight(ptrRoot->ptrRight);
 
         // Return the maximum height between left and right subtrees
         return 1 + max(leftHeight, rightHeight);
+    }
+    
+    template<typename T>
+    int treeHeightOptimized(Node<T>* ptrRoot) {
+        if (ptrRoot == nullptr) {
+            return -1;
+        }
+
+        // Consider just the red path
+        if (ptrRoot->ptrLeft != nullptr && ptrRoot->ptrLeft->color == RED) {
+            return 1 + treeHeight(ptrRoot->ptrLeft);
+        } else if (ptrRoot->ptrRight != nullptr && ptrRoot->ptrRight->color == RED) {
+            return 1 + treeHeight(ptrRoot->ptrRight);
+        } else {
+            int leftHeight = treeHeight(ptrRoot->ptrLeft);
+            int rightHeight = treeHeight(ptrRoot->ptrRight);
+            
+            // Return the maximum height between left and right subtrees
+            return 1 + std::max(leftHeight, rightHeight);
+        }
     }
 
     template<typename T>
