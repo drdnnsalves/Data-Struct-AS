@@ -77,10 +77,10 @@ namespace RedBlackFunctions {
 
     // Three auxiliary functions made for "removeNode" function
     template<typename T>
-    void fixRemoveRedBlack(Node<T>** ptrRoot, Node<T>* x);
+    void fixRemoveRedBlack(Node<T>** root, Node<T>* node);
 
     template<typename T>
-    void transplant(Node<T>** ptrRoot, Node<T>* u, Node<T>* v);
+    void transplant(Node<T>** root, Node<T>* target, Node<T>* replacement);
 
 }
 

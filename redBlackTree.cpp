@@ -80,8 +80,10 @@ int main() {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    removeNode(&root, 100);
+    removeNode(&root, 80);
     printBT(root);
+
+    cout << verifyRedProperty(root) << endl;
 
 
     /*
