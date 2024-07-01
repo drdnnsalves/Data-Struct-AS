@@ -45,7 +45,7 @@ namespace RedBlackFunctions {
         }
 
         ptrNewNode->ptrParent = ptrBefore;
-        if(ptrBefore == nullptr) {
+        if(ptrBefore == nullptr) {  // Insert as the root if tree is empty
             *ptrRoot = ptrNewNode;
         }
         else if(ptrNewNode->payload < ptrBefore->payload) {
@@ -62,24 +62,24 @@ namespace RedBlackFunctions {
     template<typename T>
     void fixInsertRedBlack(Node<T>** ptrRoot, Node<T>* ptrInsert) {
         while (ptrInsert != *ptrRoot && ptrInsert->ptrParent->color == RED) {
-            if (ptrInsert->ptrParent == ptrInsert->ptrParent->ptrParent->ptrLeft) {
+            if(ptrInsert->ptrParent == ptrInsert->ptrParent->ptrParent->ptrLeft) {
                 Node<T>* ptrUncle = ptrInsert->ptrParent->ptrParent->ptrRight;
 
                 // Case A1: Uncle is RED
-                if (ptrUncle != nullptr && ptrUncle->color == RED) {
+                if(ptrUncle != nullptr && ptrUncle->color == RED) {
                     ptrInsert->ptrParent->color = BLACK;
                     ptrUncle->color = BLACK;
                     ptrInsert->ptrParent->ptrParent->color = RED;
                     ptrInsert = ptrInsert->ptrParent->ptrParent;
                 }
                 else {
-                    // Case A2: Uncle is BLACK and current node is a right child
+                    // Case A2: Uncle is BLACK and current node is a right ptrChild
                     if (ptrInsert == ptrInsert->ptrParent->ptrRight) {
                         ptrInsert = ptrInsert->ptrParent;
                         leftRotation(ptrRoot, ptrInsert);
                     }
 
-                    // Case A3: Uncle is BLACK and current node is a left child
+                    // Case A3: Uncle is BLACK and current node is a left ptrChild
                     ptrInsert->ptrParent->color = BLACK;
                     ptrInsert->ptrParent->ptrParent->color = RED;
                     rightRotation(ptrRoot, ptrInsert->ptrParent->ptrParent);
@@ -89,14 +89,14 @@ namespace RedBlackFunctions {
                 // Symmetric cases for right side of the tree
                 Node<T>* ptrUncle = ptrInsert->ptrParent->ptrParent->ptrLeft;
 
-                if (ptrUncle != nullptr && ptrUncle->color == RED) {
+                if(ptrUncle != nullptr && ptrUncle->color == RED) {
                     ptrInsert->ptrParent->color = BLACK;
                     ptrUncle->color = BLACK;
                     ptrInsert->ptrParent->ptrParent->color = RED;
                     ptrInsert = ptrInsert->ptrParent->ptrParent;
                 } 
                 else {
-                    if (ptrInsert == ptrInsert->ptrParent->ptrLeft) {
+                    if(ptrInsert == ptrInsert->ptrParent->ptrLeft) {
                         ptrInsert = ptrInsert->ptrParent;
                         rightRotation(ptrRoot, ptrInsert);
                     }
@@ -115,16 +115,16 @@ namespace RedBlackFunctions {
         Node<T>* ptrTemp = ptrNode->ptrRight;
         ptrNode->ptrRight = ptrTemp->ptrLeft;
 
-        if (ptrTemp->ptrLeft != nullptr)
+        if(ptrTemp->ptrLeft != nullptr)
             ptrTemp->ptrLeft->ptrParent = ptrNode;
 
         ptrTemp->ptrParent = ptrNode->ptrParent;
 
-        if (ptrNode->ptrParent == nullptr)               // Case 1: ptrNode is the Root
+        if(ptrNode->ptrParent == nullptr)               // Case 1: ptrNode is the Root
             *ptrRoot = ptrTemp;
-        else if (ptrNode == ptrNode->ptrParent->ptrLeft) // Case 2: ptrNode is the left child of its parent
+        else if (ptrNode == ptrNode->ptrParent->ptrLeft) // Case 2: ptrNode is the left ptrChild of its parent
             ptrNode->ptrParent->ptrLeft = ptrTemp;
-        else                                             // Case 3: ptrNode is the right child of its parent
+        else                                             // Case 3: ptrNode is the right ptrChild of its parent
             ptrNode->ptrParent->ptrRight = ptrTemp;
 
         ptrTemp->ptrLeft = ptrNode;
@@ -136,16 +136,16 @@ namespace RedBlackFunctions {
         Node<T>* ptrTemp = ptrNode->ptrLeft;
         ptrNode->ptrLeft = ptrTemp->ptrRight;
 
-        if (ptrTemp->ptrRight != nullptr)
+        if(ptrTemp->ptrRight != nullptr)
             ptrTemp->ptrRight->ptrParent = ptrNode;
 
         ptrTemp->ptrParent = ptrNode->ptrParent;
 
-        if (ptrNode->ptrParent == nullptr)                // Case 1: ptrNode is the Root
+        if(ptrNode->ptrParent == nullptr)                // Case 1: ptrNode is the Root
             *ptrRoot = ptrTemp;
-        else if (ptrNode == ptrNode->ptrParent->ptrRight) // Case 2: ptrNode is the left child of its parent
+        else if(ptrNode == ptrNode->ptrParent->ptrRight) // Case 2: ptrNode is the left ptrChild of its parent
             ptrNode->ptrParent->ptrRight = ptrTemp;
-        else                                              // Case 3: ptrNode is the right child of its parent
+        else                                              // Case 3: ptrNode is the right ptrChild of its parent
             ptrNode->ptrParent->ptrLeft = ptrTemp;
 
         ptrTemp->ptrRight = ptrNode;
@@ -236,12 +236,12 @@ namespace RedBlackFunctions {
     
     template<typename T>
     int treeHeightOptimized(Node<T>* ptrRoot) {
-        if (ptrRoot == nullptr) {
+        if(ptrRoot == nullptr) {
             return -1;
         }
 
         // Consider just the red path
-        if (ptrRoot->ptrLeft != nullptr && ptrRoot->ptrLeft->color == RED) {
+        if(ptrRoot->ptrLeft != nullptr && ptrRoot->ptrLeft->color == RED) {
             return 1 + treeHeight(ptrRoot->ptrLeft);
         } else if (ptrRoot->ptrRight != nullptr && ptrRoot->ptrRight->color == RED) {
             return 1 + treeHeight(ptrRoot->ptrRight);
@@ -256,45 +256,45 @@ namespace RedBlackFunctions {
 
     template<typename T>
     void removeNode(Node<T>** ptrRoot, T value) {
-        Node<T>* nodeToDelete = searchNode(*ptrRoot, value); // Find the node to delete
-        if (nodeToDelete == nullptr) return;
+        Node<T>* ptrNodeToDelete = searchNode(*ptrRoot, value); // Find the node to delete
+        if(ptrNodeToDelete == nullptr) return;
 
-        Node<T>* successor = nodeToDelete;
-        Node<T>* child;
-        bool originalColorBlack = (successor->color == BLACK); // Save the original color of the node to be deleted
+        Node<T>* ptrSuccessor = ptrNodeToDelete;
+        Node<T>* ptrChild;
+        bool bOriginalColorBlack = (ptrSuccessor->color == BLACK); // Save the original color of the node to be deleted
 
-        if (nodeToDelete->ptrLeft == nullptr) {
-            child = nodeToDelete->ptrRight;
-            transplant(ptrRoot, nodeToDelete, nodeToDelete->ptrRight); // Replace nodeToDelete with its right child
+        if(ptrNodeToDelete->ptrLeft == nullptr) {
+            ptrChild = ptrNodeToDelete->ptrRight;
+            transplant(ptrRoot, ptrNodeToDelete, ptrNodeToDelete->ptrRight); // Replace ptrNodeToDelete with its right ptrChild
         } 
-        else if (nodeToDelete->ptrRight == nullptr) {
-            child = nodeToDelete->ptrLeft;
-            transplant(ptrRoot, nodeToDelete, nodeToDelete->ptrLeft); // Replace nodeToDelete with its left child
-        } 
+        else if(ptrNodeToDelete->ptrRight == nullptr) {
+            ptrChild = ptrNodeToDelete->ptrLeft;
+            transplant(ptrRoot, ptrNodeToDelete, ptrNodeToDelete->ptrLeft); // Replace ptrNodeToDelete with its left ptrChild
+        }
         else {
-            successor = minNode(nodeToDelete->ptrRight); // Find the minimum node in the right subtree
-            originalColorBlack = successor->color == BLACK; // Save the original color of the successor
-            child = successor->ptrRight;
+            ptrSuccessor = minNode(ptrNodeToDelete->ptrRight); // Find the minimum node in the right subtree
+            bOriginalColorBlack = ptrSuccessor->color == BLACK; // Save the original color of the ptrSuccessor
+            ptrChild = ptrSuccessor->ptrRight;
 
-            if (successor->ptrParent == nodeToDelete) {
-                if (child != nullptr) child->ptrParent = successor; // Update child's parent to successor if successor is the direct child of nodeToDelete
+            if (ptrSuccessor->ptrParent == ptrNodeToDelete) {
+                if (ptrChild != nullptr) ptrChild->ptrParent = ptrSuccessor; // Update ptrChild's parent to ptrSuccessor if ptrSuccessor is the direct ptrChild of ptrNodeToDelete
             } 
             else {
-                transplant(ptrRoot, successor, successor->ptrRight); // Replace successor with its right child
-                successor->ptrRight = nodeToDelete->ptrRight;
-                successor->ptrRight->ptrParent = successor;
+                transplant(ptrRoot, ptrSuccessor, ptrSuccessor->ptrRight); // Replace ptrSuccessor with its right ptrChild
+                ptrSuccessor->ptrRight = ptrNodeToDelete->ptrRight;
+                ptrSuccessor->ptrRight->ptrParent = ptrSuccessor;
             }
 
-            transplant(ptrRoot, nodeToDelete, successor); // Replace nodeToDelete with successor
-            successor->ptrLeft = nodeToDelete->ptrLeft;
-            successor->ptrLeft->ptrParent = successor;
-            successor->color = nodeToDelete->color; // Copy the color of nodeToDelete to successor
+            transplant(ptrRoot, ptrNodeToDelete, ptrSuccessor); // Replace ptrNodeToDelete with ptrSuccessor
+            ptrSuccessor->ptrLeft = ptrNodeToDelete->ptrLeft;
+            ptrSuccessor->ptrLeft->ptrParent = ptrSuccessor;
+            ptrSuccessor->color = ptrNodeToDelete->color; // Copy the color of ptrNodeToDelete to ptrSuccessor
         }
 
-        free(nodeToDelete);
+        free(ptrNodeToDelete);
 
-        if (originalColorBlack) {
-            fixRemoveRedBlack(ptrRoot, child); // Fix any violations of the Red-Black properties
+        if(bOriginalColorBlack) {
+            fixRemoveRedBlack(ptrRoot, ptrChild); // Fix any violations of the Red-Black properties
         }
     }
 
@@ -306,43 +306,49 @@ namespace RedBlackFunctions {
         clearTree(&((*ptrRoot)->ptrLeft));
         clearTree(&((*ptrRoot)->ptrRight));
 
-        free(*ptrRoot); // Free memory using free() (assuming nodes were allocated with malloc)
+        free(*ptrRoot);
         *ptrRoot = nullptr;
     }
 
     template<typename T>
     Node<T>* searchNode(Node<T>* ptrRoot, T value) {
-        if(ptrRoot == nullptr) return nullptr;
-        else if(value == ptrRoot->payload) return ptrRoot;
-        else if(value < ptrRoot->payload) return searchNode(ptrRoot->ptrLeft, value);
-        else return searchNode(ptrRoot->ptrRight, value);
+        if(ptrRoot == nullptr) {
+            cout << "Error: Node with value " << value << " not found." << endl;
+            return nullptr;
+        } 
+        else if(value == ptrRoot->payload)
+            return ptrRoot;
+        else if(value < ptrRoot->payload)
+            return searchNode(ptrRoot->ptrLeft, value);
+        else
+            return searchNode(ptrRoot->ptrRight, value);
     }
 
     template<typename T>
-    bool verifyRedBlack(Node<T>* ptrNode) {
-        if(ptrNode == nullptr) return true;  // An empty tree is a valid Red-Black tree
+    bool verifyRedBlack(Node<T>* ptrRoot) {
+        if(ptrRoot == nullptr) return true;  // An empty tree is a valid Red-Black tree
 
         // Root is black
-        if(ptrNode->color != BLACK) {
+        if(ptrRoot->color != BLACK) {
             cerr << "Error: The root is not black" << endl;
             return false;
         }
 
-        // Red nodes have black children
-        if(!verifyRedProperty(ptrNode)) {
+        // Red nodes have black ptrChildren
+        if(!verifyRedProperty(ptrRoot)) {
             cerr << "Error: The property of red nodes is violated" << endl;
             return false;
         }
 
         // All paths from any node to its descendant leaves contain the same number of black nodes
         int blackNodeCount = 0;
-        Node<T>* temp = ptrNode;
+        Node<T>* temp = ptrRoot;
         while(temp != nullptr) {
-            if (temp->color == BLACK) blackNodeCount++;
+            if(temp->color == BLACK) blackNodeCount++;
             temp = temp->ptrLeft;
         }
 
-        if(!verifyBlackProperty(ptrNode, blackNodeCount, 0)) {
+        if(!verifyBlackProperty(ptrRoot, blackNodeCount, 0)) {
             cerr << "Error: Paths from nodes to NIL do not have the same number of black nodes" << endl;
             return false;
         }
@@ -354,7 +360,7 @@ namespace RedBlackFunctions {
     bool verifyRedProperty(Node<T>* ptrNode) {
         if(ptrNode == nullptr) return true;
 
-        // Checks if a red node has black children
+        // Checks if a red node has black ptrChildren
         if(ptrNode->color == RED) {
             if ((ptrNode->ptrLeft != nullptr && ptrNode->ptrLeft->color == RED) ||
                 (ptrNode->ptrRight != nullptr && ptrNode->ptrRight->color == RED)) {
@@ -368,14 +374,12 @@ namespace RedBlackFunctions {
 
     template<typename T>
     bool verifyBlackProperty(Node<T>* ptrNode, int blackNodeCount, int currentCount) {
-        if(ptrNode == nullptr) {
+        if(ptrNode == nullptr)
             return currentCount == blackNodeCount;
-        }
 
         // Increment the current black node count if the current node is black.
-        if(ptrNode->color == BLACK) {
+        if(ptrNode->color == BLACK)
             currentCount++;
-        }
 
         // Recursively verify the black height property for both the left and right subtrees.
         return verifyBlackProperty(ptrNode->ptrLeft, blackNodeCount, currentCount) &&
@@ -383,8 +387,8 @@ namespace RedBlackFunctions {
     }
 
     template<typename T>
-    void fixRemoveRedBlack(Node<T>** root, Node<T>* node) {
-        while (node != *root && (node == nullptr || node->color == BLACK)) {
+    void fixRemoveRedBlack(Node<T>** ptrRoot, Node<T>* node) {
+        while (node != *ptrRoot && (node == nullptr || node->color == BLACK)) {
 
             if (node == nullptr) return;
 
@@ -396,30 +400,30 @@ namespace RedBlackFunctions {
                     if (sibling->color == RED) {
                         sibling->color = BLACK;
                         node->ptrParent->color = RED;
-                        leftRotation(root, node->ptrParent);
+                        leftRotation(ptrRoot, node->ptrParent);
                         sibling = node->ptrParent->ptrRight;
                     }
 
-                    // Case 2: Sibling's children are both black
+                    // Case 2: Sibling's ptrChildren are both black
                     if ((sibling->ptrLeft == nullptr || sibling->ptrLeft->color == BLACK) &&
                         (sibling->ptrRight == nullptr || sibling->ptrRight->color == BLACK)) {
                         sibling->color = RED;
                         node = node->ptrParent;
                     } else {
-                        // Case 3: Sibling's right child is black
+                        // Case 3: Sibling's right ptrChild is black
                         if (sibling->ptrRight == nullptr || sibling->ptrRight->color == BLACK) {
                             if (sibling->ptrLeft != nullptr) sibling->ptrLeft->color = BLACK;
                             sibling->color = RED;
-                            rightRotation(root, sibling);
+                            rightRotation(ptrRoot, sibling);
                             sibling = node->ptrParent->ptrRight;
                         }
 
-                        // Case 4: Sibling's right child is red
+                        // Case 4: Sibling's right ptrChild is red
                         sibling->color = node->ptrParent->color;
                         node->ptrParent->color = BLACK;
                         if (sibling->ptrRight != nullptr) sibling->ptrRight->color = BLACK;
-                        leftRotation(root, node->ptrParent);
-                        node = *root;
+                        leftRotation(ptrRoot, node->ptrParent);
+                        node = *ptrRoot;
                     }
                 }
             } else {
@@ -430,60 +434,56 @@ namespace RedBlackFunctions {
                     if (sibling->color == RED) {
                         sibling->color = BLACK;
                         node->ptrParent->color = RED;
-                        rightRotation(root, node->ptrParent);
+                        rightRotation(ptrRoot, node->ptrParent);
                         sibling = node->ptrParent->ptrLeft;
                     }
 
-                    // Case 2: Sibling's children are both black
+                    // Case 2: Sibling's ptrChildren are both black
                     if ((sibling->ptrRight == nullptr || sibling->ptrRight->color == BLACK) &&
                         (sibling->ptrLeft == nullptr || sibling->ptrLeft->color == BLACK)) {
                         sibling->color = RED;
                         node = node->ptrParent;
                     } else {
-                        // Case 3: Sibling's left child is black
+                        // Case 3: Sibling's left ptrChild is black
                         if (sibling->ptrLeft == nullptr || sibling->ptrLeft->color == BLACK) {
                             if (sibling->ptrRight != nullptr) sibling->ptrRight->color = BLACK;
                             sibling->color = RED;
-                            leftRotation(root, sibling);
+                            leftRotation(ptrRoot, sibling);
                             sibling = node->ptrParent->ptrLeft;
                         }
 
-                        // Case 4: Sibling's left child is red
+                        // Case 4: Sibling's left ptrChild is red
                         sibling->color = node->ptrParent->color;
                         node->ptrParent->color = BLACK;
                         if (sibling->ptrLeft != nullptr) sibling->ptrLeft->color = BLACK;
-                        rightRotation(root, node->ptrParent);
-                        node = *root;
+                        rightRotation(ptrRoot, node->ptrParent);
+                        node = *ptrRoot;
                     }
                 }
             }
         }
-
         if (node != nullptr) node->color = BLACK;
     }
 
 
     template<typename T>
-    void transplant(Node<T>** root, Node<T>* target, Node<T>* replacement) {
+    void transplant(Node<T>** ptrRoot, Node<T>* target, Node<T>* replacement) {
         // If target is the root of the tree, set the root to replacement
-        if (target->ptrParent == nullptr) {
-            *root = replacement;
+        if(target->ptrParent == nullptr) {
+            *ptrRoot = replacement;
         }
-        // If target is the left child, replace it with replacement as the left child
-        else if (target == target->ptrParent->ptrLeft) {
+        // If target is the left ptrChild, replace it with replacement as the left ptrChild
+        else if(target == target->ptrParent->ptrLeft) {
             target->ptrParent->ptrLeft = replacement;
         }
-        // If target is the right child, replace it with replacement as the right child
+        // If target is the right ptrChild, replace it with replacement as the right ptrChild
         else {
             target->ptrParent->ptrRight = replacement;
         }
         // Set replacement's parent to target's parent, if replacement is not nullptr
-        if (replacement != nullptr) {
+        if(replacement != nullptr)
             replacement->ptrParent = target->ptrParent;
-        }
     }
-
-
 
 }
 
