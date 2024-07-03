@@ -241,9 +241,9 @@ namespace RedBlackFunctions {
         }
 
         // Consider just the red path
-        if(ptrRoot->ptrLeft != nullptr && ptrRoot->ptrLeft->color == RED) {
+        if(ptrRoot->ptrLeft != nullptr && ptrRoot->ptrLeft->color == RED && ptrRoot->ptrRight != nullptr && ptrRoot->ptrRight->color == BLACK) {
             return 1 + treeHeightOptimized(ptrRoot->ptrLeft);
-        } else if (ptrRoot->ptrRight != nullptr && ptrRoot->ptrRight->color == RED) {
+        } else if (ptrRoot->ptrRight != nullptr && ptrRoot->ptrRight->color == RED && ptrRoot->ptrLeft != nullptr && ptrRoot->ptrLeft->color == BLACK) {
             return 1 + treeHeightOptimized(ptrRoot->ptrRight);
         } else {
             int leftHeight = treeHeightOptimized(ptrRoot->ptrLeft);
