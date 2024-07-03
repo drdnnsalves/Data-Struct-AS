@@ -485,5 +485,68 @@ namespace RedBlackFunctions {
             replacement->ptrParent = target->ptrParent;
     }
 
+// Explicit instantiations for char
+template Node<char>* createNode(char value);
+template void insertNode(Node<char>** ptrRoot, char value);
+template void fixInsertRedBlack(Node<char>** ptrRoot, Node<char>* ptrInsert);
+template void leftRotation(Node<char>** ptrRoot, Node<char>* ptrNode);
+template void rightRotation(Node<char>** ptrRoot, Node<char>* ptrNode);
+template void traverseInOrder(Node<char>* ptrRoot);
+template void printBT(const Node<char>* node);
+template Node<char>* maxNode(Node<char>* ptrRoot);
+template Node<char>* minNode(Node<char>* ptrRoot);
+template int treeHeight(Node<char>* ptrRoot);
+template int treeHeightOptimized(Node<char>* ptrRoot);
+template void removeNode(Node<char>** ptrRoot, char value);
+template void clearTree(Node<char>** ptrRoot);
+template Node<char>* searchNode(Node<char>* ptrRoot, char value);
+template bool verifyRedBlack(Node<char>* ptrRoot);
+template bool verifyRedProperty(Node<char>* ptrNode);
+template bool verifyBlackProperty(Node<char>* ptrNode, int blackNodeCount, int currentCount);
+template void fixRemoveRedBlack(Node<char>** ptrRoot, Node<char>* node);
+template void transplant(Node<char>** ptrRoot, Node<char>* target, Node<char>* replacement);
+
+// Explicit instantiations for float
+template Node<float>* createNode(float value);
+template void insertNode(Node<float>** ptrRoot, float value);
+template void fixInsertRedBlack(Node<float>** ptrRoot, Node<float>* ptrInsert);
+template void leftRotation(Node<float>** ptrRoot, Node<float>* ptrNode);
+template void rightRotation(Node<float>** ptrRoot, Node<float>* ptrNode);
+template void traverseInOrder(Node<float>* ptrRoot);
+template void printBT(const Node<float>* node);
+template Node<float>* maxNode(Node<float>* ptrRoot);
+template Node<float>* minNode(Node<float>* ptrRoot);
+template int treeHeight(Node<float>* ptrRoot);
+template int treeHeightOptimized(Node<float>* ptrRoot);
+template void removeNode(Node<float>** ptrRoot, float value);
+template void clearTree(Node<float>** ptrRoot);
+template Node<float>* searchNode(Node<float>* ptrRoot, float value);
+template bool verifyRedBlack(Node<float>* ptrRoot);
+template bool verifyRedProperty(Node<float>* ptrNode);
+template bool verifyBlackProperty(Node<float>* ptrNode, int blackNodeCount, int currentCount);
+template void fixRemoveRedBlack(Node<float>** ptrRoot, Node<float>* node);
+template void transplant(Node<float>** ptrRoot, Node<float>* target, Node<float>* replacement);
+
+// Explicit instantiations for int
+template Node<int>* createNode(int value);
+template void insertNode(Node<int>** ptrRoot, int value);
+template void fixInsertRedBlack(Node<int>** ptrRoot, Node<int>* ptrInsert);
+template void leftRotation(Node<int>** ptrRoot, Node<int>* ptrNode);
+template void rightRotation(Node<int>** ptrRoot, Node<int>* ptrNode);
+template void traverseInOrder(Node<int>* ptrRoot);
+template void printBT(const Node<int>* node);
+template Node<int>* maxNode(Node<int>* ptrRoot);
+template Node<int>* minNode(Node<int>* ptrRoot);
+template int treeHeight(Node<int>* ptrRoot);
+template int treeHeightOptimized(Node<int>* ptrRoot);
+template void removeNode(Node<int>** ptrRoot, int value);
+template void clearTree(Node<int>** ptrRoot);
+template Node<int>* searchNode(Node<int>* ptrRoot, int value);
+template bool verifyRedBlack(Node<int>* ptrRoot);
+template bool verifyRedProperty(Node<int>* ptrNode);
+template bool verifyBlackProperty(Node<int>* ptrNode, int blackNodeCount, int currentCount);
+template void fixRemoveRedBlack(Node<int>** ptrRoot, Node<int>* node);
+template void transplant(Node<int>** ptrRoot, Node<int>* target, Node<int>* replacement);
+
 }
 

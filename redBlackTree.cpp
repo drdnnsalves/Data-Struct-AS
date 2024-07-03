@@ -225,7 +225,41 @@ int main() {
     // Print the results
     cout << "Average execution time of treeHeightOptimized: " << avgDurationOptimized << " nanoseconds" << endl;
     cout << "Average execution time of treeHeight:          " << avgDurationNormal << " nanoseconds" << endl;
-    
 
+    cout << "\n\n#=#=#=#=#=#=# Explicit instantiations #=#=#=#=#=#=#\n\n";
+
+    // Tree Red-Black for int
+    Node<int>* rootInt = nullptr;
+    insertNode(&rootInt, 10);
+    insertNode(&rootInt, 20);
+    insertNode(&rootInt, 5);
+    traverseInOrder(rootInt);
+    cout << endl;
+    printBT(rootInt);
+    cout << endl;
+    clearTree(&rootInt);
+
+    // Tree Red-Black for floats
+    Node<float>* rootFloat = nullptr;
+    insertNode(&rootFloat, 10.5f);
+    insertNode(&rootFloat, 20.3f);
+    insertNode(&rootFloat, 5.7f);
+    traverseInOrder(rootFloat);
+    cout << endl;
+    printBT(rootFloat);
+    cout << endl;
+    clearTree(&rootFloat);
+
+    // Tree Red-Black for char
+    Node<char>* rootChar = nullptr;
+    insertNode(&rootChar, 'b');
+    insertNode(&rootChar, 'a');
+    insertNode(&rootChar, 'c');
+    traverseInOrder(rootChar);
+    cout << endl;
+    printBT(rootChar);
+    cout << endl;
+    clearTree(&rootChar);
+    
     return 0;
 }
