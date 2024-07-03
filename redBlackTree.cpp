@@ -28,7 +28,7 @@ int main() {
     printBT(root);
 
     // Verifying red-black
-    cout << "\nVerifying red-blach property: " << verifyRedProperty(root) << endl;
+    cout << "\nVerifying red-black property: " << verifyRedProperty(root) << endl;
 
     cout << "\n\nCase A: The node's parent is the left child of its parent: \n\n";
     cout << "Adding node 70. We have Case A1: Uncle is RED. \n";
@@ -37,7 +37,7 @@ int main() {
     printBT(root);
 
     // Verifying red-black
-    cout << "\nVerifying red-blach property: " << verifyRedProperty(root) << endl;
+    cout << "\nVerifying red-black property: " << verifyRedProperty(root) << endl;
 
     cout << "\n\nAdding node 75. We have case A2: Uncle is BLACK and current node is a right child \n";
 
@@ -45,7 +45,7 @@ int main() {
     printBT(root);
 
     // Verifying red-black
-    cout << "\nVerifying red-blach property: " << verifyRedProperty(root) << endl;
+    cout << "\nVerifying red-black property: " << verifyRedProperty(root) << endl;
 
     cout << "\n\nAdding node 65.\n";
 
@@ -53,7 +53,7 @@ int main() {
     printBT(root);
 
     // Verifying red-black
-    cout << "\nVerifying red-blach property: " << verifyRedProperty(root) << endl;
+    cout << "\nVerifying red-black property: " << verifyRedProperty(root) << endl;
 
     cout << "\n\nAdding node 60. We have Case A3: Uncle is BLACK and current node is a left child\n";
     
@@ -61,7 +61,7 @@ int main() {
     printBT(root);
 
     // Verifying red-black
-    cout << "\nVerifying red-blach property: " << verifyRedProperty(root) << endl;
+    cout << "\nVerifying red-black property: " << verifyRedProperty(root) << endl;
 
     cout << "\n\nCase B: The node's parent is the right child of its parent: \n\n";
     cout << "Adding node 115. We have case B1: Uncle is RED\n";
@@ -70,7 +70,7 @@ int main() {
     printBT(root);
 
     // Verifying red-black
-    cout << "\nVerifying red-blach property: " << verifyRedProperty(root) << endl;
+    cout << "\nVerifying red-black property: " << verifyRedProperty(root) << endl;
 
     cout << "\n\nAdding node 120. We have Case B2: Uncle is BLACK and current node is a right child\n";
 
@@ -78,14 +78,14 @@ int main() {
     printBT(root);
 
     // Verifying red-black
-    cout << "\nVerifying red-blach property: " << verifyRedProperty(root) << endl;
+    cout << "\nVerifying red-black property: " << verifyRedProperty(root) << endl;
 
     cout <<"\n\nAdding node 105\n";
     insertNode(&root, 105);
     printBT(root);
 
     // Verifying red-black
-    cout << "\nVerifying red-blach property: " << verifyRedProperty(root) << endl;
+    cout << "\nVerifying red-black property: " << verifyRedProperty(root) << endl;
 
     cout << "\n\nAdding node 117. We have Case B3: Uncle is BLACK and current node is a left child\n";
 
@@ -93,7 +93,7 @@ int main() {
     printBT(root);
 
     // Verifying red-black
-    cout << "\nVerifying red-blach property: " << verifyRedProperty(root) << endl;
+    cout << "\nVerifying red-black property: " << verifyRedProperty(root) << endl;
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -143,13 +143,13 @@ int main() {
 
     cout << "After each step, we use the function 'verifyRedBlack', which returns '0' if the tree is not a red-black tree and '1' if it is\n\n";
 
-    cout << "Removing node 8. Case 1: The node doesn't have children.\n";
+    cout << "Removing node 80. Case 1: The node doesn't have children.\n";
 
     removeNode(&root, 80);
     printBT(root);
 
     // Verifying red-black
-    cout << "\nVerifying red-blach property: " << verifyRedProperty(root) << endl << endl;
+    cout << "\nVerifying red-black property: " << verifyRedProperty(root) << endl << endl;
 
     cout << "Removing node 120. Case 2: The node has the left children.\n";
 
@@ -157,7 +157,7 @@ int main() {
     printBT(root);
 
     // Verifying red-black
-    cout << "\nVerifying red-blach property: " << verifyRedProperty(root) << endl << endl;
+    cout << "\nVerifying red-black property: " << verifyRedProperty(root) << endl << endl;
 
     cout << "Removing node 115. Case 3: The node has both childrens.\n";
 
@@ -165,7 +165,7 @@ int main() {
     printBT(root);
 
     // Verifying red-black
-    cout << "\nVerifying red-blach property: " << verifyRedProperty(root) << endl << endl;
+    cout << "\nVerifying red-black property: " << verifyRedProperty(root) << endl << endl;
 
     cout << "Removing node 100. Case 4: Removing the root.\n";
 
@@ -173,7 +173,7 @@ int main() {
     printBT(root);
 
     // Verifying red-black
-    cout << "\nVerifying red-blach property: " << verifyRedProperty(root) << endl << endl;
+    cout << "\nVerifying red-black property: " << verifyRedProperty(root) << endl << endl;
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     
